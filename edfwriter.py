@@ -165,7 +165,7 @@ class EDFwriter:
   EDFLIB_PHYSMIN_IS_PHYSMAX         = -25
   EDFLIB_DATARECORD_SIZE_TOO_BIG    = -26
 
-  EDFLIB_VERSION = 100
+  EDFLIB_VERSION = 101
 
 # max size of annotationtext
   __EDFLIB_WRITE_MAX_ANNOTATION_LEN = 40
@@ -181,6 +181,12 @@ class EDFwriter:
   __EDFAnnotationStruct = namedtuple("annotation", ["onset", "duration", "description"])
 
   def __init__(self, p_path: str, f_file_type: int, number_of_signals: int):
+    """Creates an instance of an EDF writer.
+
+    Path is the path to the EDF file.
+    Filetype must be EDFLIB_FILETYPE_EDFPLUS or EDFLIB_FILETYPE_BDFPLUS.
+    Number of signals: the number of signals that you are planning to write into the file.
+    """
     self.__path = p_path
     self.__filetype = f_file_type
     self.__edfsignals = number_of_signals

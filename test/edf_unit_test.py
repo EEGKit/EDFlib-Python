@@ -5,6 +5,7 @@ sys.path.append("../")
 import io
 import numpy as np
 from struct import *
+from datetime import datetime
 from edfreader import EDFreader
 from edfreader import EDFexception
 from edfwriter import EDFwriter
@@ -69,7 +70,7 @@ ibuf = np.zeros(300, dtype = np.int32)
 
 hdl_out = EDFwriter("test.edf", EDFwriter.EDFLIB_FILETYPE_EDFPLUS, 512)
 
-assert(hdl_out.version() == 100)
+assert(hdl_out.version() == 101)
 for i in range(0, 512):
   assert(hdl_out.setSampleFrequency(i, 10239) == 0)
   assert(hdl_out.setPhysicalMaximum(i, -10000) == 0)
@@ -322,6 +323,7 @@ assert(hdl_out.close() == 0)
 
 hdl_in = EDFreader("test.edf")
 
+assert(hdl_in.version() == 101)
 assert(hdl_in.getFileType() == hdl_in.EDFLIB_FILETYPE_EDFPLUS)
 assert(hdl_in.getNumSignals() == 2)
 assert(dblcmp_lim(hdl_in.getSampleFrequency(0), 153.8461538, 1e-6) == 0)
@@ -336,6 +338,14 @@ assert(hdl_in.getStartTimeSecond() == 8)
 assert(hdl_in.getStartTimeMinute() == 23)
 assert(hdl_in.getStartTimeHour() == 12)
 assert(hdl_in.getStartTimeSubSecond() == 0)
+dt = hdl_in.getStartDateTime()
+assert(dt.day == 5)
+assert(dt.month == 12)
+assert(dt.year == 2017)
+assert(dt.second == 8)
+assert(dt.minute == 23)
+assert(dt.hour == 12)
+assert(dt.microsecond == 0)
 assert(hdl_in.getPatientName() == "John Doe")
 assert(hdl_in.getPatientCode() == "01234")
 assert(hdl_in.getPatientGender() == "Male")
@@ -1411,6 +1421,15 @@ assert(hdl_in.getAdministrationCode() == "Delta")
 assert(hdl_in.getTechnician() == "Echo")
 assert(hdl_in.getEquipment() == "Foxtrot"), ("->%s<-" %(hdl_in.getEquipment()))
 assert(hdl_in.getRecordingAdditional()[0 : 4] == "Golf")
+
+dt = hdl_in.getStartDateTime()
+assert(dt.day == 31)
+assert(dt.month == 12)
+assert(dt.year == 2008)
+assert(dt.second == 58)
+assert(dt.minute == 59)
+assert(dt.hour == 23)
+assert(dt.microsecond == 123400)
 
 assert(hdl_in.close() == 0)
 

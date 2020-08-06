@@ -36,6 +36,7 @@ import string
 import array
 from collections import namedtuple
 import numpy as np
+from datetime import datetime
 
 if sys.version_info[0] != 3 or sys.version_info[1] < 5:
   print("Must be using Python version >= 3.5.0")
@@ -164,7 +165,7 @@ class EDFreader:
   EDFLIB_PHYSMIN_IS_PHYSMAX         = -25
   EDFLIB_DATARECORD_SIZE_TOO_BIG    = -26
 
-  EDFLIB_VERSION = 100
+  EDFLIB_VERSION = 101
 
 # max size of annotationtext
   __EDFLIB_WRITE_MAX_ANNOTATION_LEN = 40
@@ -180,6 +181,10 @@ class EDFreader:
   EDFAnnotationStruct = namedtuple("annotation", ["onset", "duration", "description"])
 
   def __init__(self, path: str):
+    """Creates an instance of an EDF reader.
+
+    Path is the path to the EDF file.
+    """
     self.__path = path
     self.__status_ok = 0
     self.__edf = 0
@@ -318,6 +323,12 @@ class EDFreader:
     if self.__status_ok == 0:
       raise EDFException("File is closed.")
     return self.__startdate_year
+
+  def getStartDateTime(self) -> datetime:
+    """Returns a datetime structure containing the startdate and starttime of the recording."""
+    if self.__status_ok == 0:
+      raise EDFException("File is closed.")
+    return self.__filestart_dt
 
   def getPatient(self) -> str:
     """Returns the patient field of the file header.
@@ -916,6 +927,8 @@ class EDFreader:
                     return 2
                   else:
                     self.__starttime_offset = time_tmp
+                    self.__filestart_dt = datetime(self.__startdate_year, self.__startdate_month, self.__startdate_day, self.__starttime_hour, self.__starttime_minute, self.__starttime_second, self.__starttime_offset // 10)
+
                 elapsedtime = time_tmp
                 error = 0
                 break
@@ -1093,6 +1106,8 @@ class EDFreader:
     self.__l_starttime += 60 * self.__starttime_minute
     self.__l_starttime += self.__starttime_second
     self.__l_starttime *= self.EDFLIB_TIME_DIMENSION
+
+    self.__filestart_dt = datetime(self.__startdate_year, self.__startdate_month, self.__startdate_day, self.__starttime_hour, self.__starttime_minute, self.__starttime_second, 0)
 
 ################## NUMBER OF SIGNALS IN HEADER #################################
     str4 = hdr[252:256]
@@ -1954,7 +1969,7 @@ class EDFreader:
         value += ((str_[i] - 48) * radix)
         radix *= 10
 
-    return value
+    return int(value)
 
 # check duration number
   def __is_duration_number(self, str_):
@@ -2066,9 +2081,9 @@ class EDFreader:
         radix *= 10
 
     if neg != 0:
-      return -value
+      return int(-value)
 
-    return value
+    return int(value)
 
 # get string length
   def __strlen(self, str_):
