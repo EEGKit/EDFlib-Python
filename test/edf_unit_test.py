@@ -70,7 +70,7 @@ ibuf = np.zeros(300, dtype = np.int32)
 
 hdl_out = EDFwriter("test.edf", EDFwriter.EDFLIB_FILETYPE_EDFPLUS, 512)
 
-assert(hdl_out.version() == 101)
+assert(hdl_out.version() == 102)
 for i in range(0, 512):
   assert(hdl_out.setSampleFrequency(i, 10239) == 0)
   assert(hdl_out.setPhysicalMaximum(i, -10000) == 0)
@@ -323,7 +323,7 @@ assert(hdl_out.close() == 0)
 
 hdl_in = EDFreader("test.edf")
 
-assert(hdl_in.version() == 101)
+assert(hdl_in.version() == 102)
 assert(hdl_in.getFileType() == hdl_in.EDFLIB_FILETYPE_EDFPLUS)
 assert(hdl_in.getNumSignals() == 2)
 assert(dblcmp_lim(hdl_in.getSampleFrequency(0), 153.8461538, 1e-6) == 0)
@@ -578,6 +578,16 @@ assert(hdl_in.readSamples(0, ibuf, 15) == 15)
 
 for i in range(0, 15):
   assert(ibuf[i] == -10100 + ((i + 65) * 253))
+
+assert(hdl_in.fseek(0, 115, hdl_in.EDFSEEK_SET) == 115)
+
+assert(hdl_in.readSamples(0, ibuf, 80) == 80)
+
+for i in range(0, 5):
+  assert(ibuf[i] == 5695 + (i * 1053))
+assert(ibuf[5] == -10000)
+for i in range(6, 80):
+  assert(ibuf[i] == -10100 + ((i - 5) * 253))
 
 assert(hdl_in.close() == 0)
 

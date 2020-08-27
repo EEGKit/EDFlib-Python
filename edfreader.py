@@ -165,7 +165,7 @@ class EDFreader:
   EDFLIB_PHYSMIN_IS_PHYSMAX         = -25
   EDFLIB_DATARECORD_SIZE_TOO_BIG    = -26
 
-  EDFLIB_VERSION = 101
+  EDFLIB_VERSION = 102
 
 # max size of annotationtext
   __EDFLIB_WRITE_MAX_ANNOTATION_LEN = 40
@@ -765,6 +765,11 @@ class EDFreader:
 
     channel = self.__mapped_signals[s]
 
+    if self.__edf != 0:
+      bytes_per_smpl = 2
+    else:
+      bytes_per_smpl = 3
+
     smp_in_file = self.__param_smp_per_record[channel] * self.__datarecords
 
     if (self.__param_sample_pntr[channel] + n) > smp_in_file:
@@ -779,10 +784,7 @@ class EDFreader:
     offset = self.__hdrsize
     offset += (self.__param_sample_pntr[channel] // self.__param_smp_per_record[channel]) * self.__recordsize
     offset += self.__param_buf_offset[channel]
-    if self.__edf != 0:
-      offset += ((self.__param_sample_pntr[channel] % self.__param_smp_per_record[channel]) * 2)
-    else:
-      offset += ((self.__param_sample_pntr[channel] % self.__param_smp_per_record[channel]) * 3)
+    offset += ((self.__param_sample_pntr[channel] % self.__param_smp_per_record[channel]) * bytes_per_smpl)
 
     self.__file_in.seek(offset, io.SEEK_SET)
 
@@ -790,21 +792,21 @@ class EDFreader:
 
     smp_per_record = self.__param_smp_per_record[channel]
 
+    jump = self.__recordsize - (smp_per_record * bytes_per_smpl)
+
     if self.__edf != 0:
       if (buf.dtype == np.int16) or (buf.dtype == np.int32):
         for i in range(0, n):
           if (sample_pntr % smp_per_record) == 0:
             if i != 0:
-              offset += self.__recordsize
-              self.__file_in.seek(offset, io.SEEK_SET)
+              self.__file_in.seek(jump, io.SEEK_CUR)
           buf[i] = int.from_bytes(self.__file_in.read(2), byteorder="little", signed=True)
           sample_pntr += 1
       else:
         for i in range(0, n):
           if (sample_pntr % smp_per_record) == 0:
             if i != 0:
-              offset += self.__recordsize
-              self.__file_in.seek(offset, io.SEEK_SET)
+              self.__file_in.seek(jump, io.SEEK_CUR)
           buf[i] = self.__param_bitvalue[channel] * (self.__param_offset[channel] + int.from_bytes(self.__file_in.read(2), byteorder="little", signed=True))
           sample_pntr += 1
     else:
@@ -812,16 +814,14 @@ class EDFreader:
         for i in range(0, n):
           if (sample_pntr % smp_per_record) == 0:
             if i != 0:
-              offset += self.__recordsize
-              self.__file_in.seek(offset, io.SEEK_SET)
+              self.__file_in.seek(jump, io.SEEK_CUR)
           buf[i] = int.from_bytes(self.__file_in.read(3), byteorder="little", signed=True)
           sample_pntr += 1
       else:
         for i in range(0, n):
           if (sample_pntr % smp_per_record) == 0:
             if i != 0:
-              offset += self.__recordsize
-              self.__file_in.seek(offset, io.SEEK_SET)
+              self.__file_in.seek(jump, io.SEEK_CUR)
           buf[i] = self.__param_bitvalue[channel] * (self.__param_offset[channel] + int.from_bytes(self.__file_in.read(3), byteorder="little", signed=True))
           sample_pntr += 1
 
