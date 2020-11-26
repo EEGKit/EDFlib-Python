@@ -489,7 +489,7 @@ class EDFwriter:
     This function is optional and can be called only before the first sample write action.
     If subsecond precision is not needed or not applicable, leave it at zero.
 
-    year: 1970 - 3000
+    year: 1985 - 2084
     month: 1 - 12
     day: 1 - 31
     hour: 0 - 23
@@ -501,7 +501,7 @@ class EDFwriter:
     """
     if self.__datarecords != 0:
       return -1
-    if (year < 1970)   or (year > 3000) or \
+    if (year < 1985)   or (year > 2084) or \
        (month < 1)     or (month > 12)  or \
        (day < 1)       or (day > 31)    or \
        (hour < 0)      or (hour > 23)   or \

@@ -1590,9 +1590,7 @@ class EDFreader:
         if error != 0:
           return -39
 
-        self.__startdate_year = self.__atoi_nonlocalized(str16, 7)
-
-        if self.__startdate_year < 1970:
+        if self.__startdate_year != self.__atoi_nonlocalized(str16, 7):
           return -40
 
       p = 10
