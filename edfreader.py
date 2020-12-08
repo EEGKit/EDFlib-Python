@@ -1728,9 +1728,9 @@ class EDFreader:
       if str_[j] < 48 or str_[j] > 57:
         break
       value *= 10
-      value += (str_[j] - 48)
+      value += ((str_[j] - 48) * sign)
 
-    return (value * sign)
+    return value
 
 # Checks a string for a valid integer number (left-aligned, filled-up with spaces, etc.)
   def __is_integer_number(self, str_):

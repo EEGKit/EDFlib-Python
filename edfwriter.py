@@ -1318,7 +1318,7 @@ class EDFwriter:
     if q < 0:
       str_[j] = 45
       j += 1
-      q = -q
+      base = -base
     else:
       if sign != 0:
         str_[j] = 43
@@ -1368,7 +1368,7 @@ class EDFwriter:
       j += 1
 
       if q < 0:
-        q = -q
+        base = -base
 
     if j == sz:
       j -= 1
@@ -1409,7 +1409,7 @@ class EDFwriter:
     q = int(var)
 
     if q < 0:
-      q = -q
+      base = -base
 
     if q == 0:
       dest[j] = 0
@@ -1479,7 +1479,7 @@ class EDFwriter:
       dest[j] = 45
       j += 1
 
-      q = -q
+      base = -base
     else:
       if sign != 0:
         dest[j] = 43
@@ -1543,7 +1543,7 @@ class EDFwriter:
     if q < 0:
       f.write(bytes("-", encoding="ascii"))
       j += 1
-      q = -q
+      base = -base
     else:
       if sign != 0:
         f.write(bytes("+", encoding="ascii"))
