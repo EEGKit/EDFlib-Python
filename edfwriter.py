@@ -488,6 +488,7 @@ class EDFwriter:
     If not called, the system date and time at runtime will be used.
     This function is optional and can be called only before the first sample write action.
     If subsecond precision is not needed or not applicable, leave it at zero.
+    Note: for anonymization purposes, the consensus is to use 1985-01-01 00:00:00 for the startdate and starttime.
 
     year: 1985 - 2084
     month: 1 - 12
