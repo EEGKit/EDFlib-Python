@@ -301,6 +301,8 @@ class EDFwriter:
     """Sets the maximum physical value of signal s.
 
     This is the value of the input of the ADC when the output equals the value of "digital maximum".
+    It is the highest value that the equipment is able to record. It does not necessarily mean the signal recorded reaches this level.
+    Must be un-equal to physical minimum.
     This function is required for every signal and can be called only before the first sample write action.
 
     s is the signal number (zero-based).
@@ -329,6 +331,8 @@ class EDFwriter:
     """Sets the minimum physical value of signal s.
 
     This is the value of the input of the ADC when the output equals the value of "digital minimum".
+    It is the lowest value that the equipment is able to record. It does not necessarily mean the signal recorded reaches this level.
+    Must be un-equal to physical maximum.
     This function is required for every signal and can be called only before the first sample write action.
 
     s is the signal number (zero-based).
@@ -356,7 +360,9 @@ class EDFwriter:
   def setDigitalMaximum(self, s: int, dig_max: int) -> int:
     """Sets the maximum digital value of signal s.
 
-    This is the value of the output of the ADC when the input equals the value of "physical maximum".
+    Usually it's the extreme output of the ADC. The maximum value is 32767 for EDF and 8388607 for BDF.
+    It is the highest value that the equipment is able to record. It does not necessarily mean the signal recorded reaches this level.
+    Must be higher than digital minimum.
     This function is required for every signal and can be called only before the first sample write action.
 
     s is the signal number (zero-based).
@@ -390,7 +396,9 @@ class EDFwriter:
   def setDigitalMinimum(self, s: int, dig_min: int) -> int:
     """Sets the minimum digital value of signal s.
 
-    This is the value of the output of the ADC when the input equals the value of "physical minimum".
+    Usually it's the extreme output of the ADC. The minimum value is -32768 for EDF and -8388608 for BDF.
+    It is the lowest value that the equipment is able to record. It does not necessarily mean the signal recorded reaches this level.
+    Must be lower than digital maximum.
     This function is required for every signal and can be called only before the first sample write action.
 
     s is the signal number (zero-based).
