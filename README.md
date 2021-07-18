@@ -5,7 +5,7 @@ EDFlib for Python is a programming library to read/write EDF+ (16-bit) and BDF+ 
 
 For more info visit: https://www.teuniz.net/edflib_python/
 
-No merge requests. If you want to report a bug, create an issue.
+No merge/pull requests. If you want to report a bug, create an issue.
 
 License: 3-clause BSD license.
 
