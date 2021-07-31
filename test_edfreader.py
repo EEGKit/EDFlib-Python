@@ -13,7 +13,7 @@ if np.__version__ < "1.17.0":
   sys.exit()
 
 if len(sys.argv) != 2:
-  print("usage: test_edflib.py <filename>\n")
+  print("usage: test_edfreader.py <filename>\n")
   sys.exit()
 
 hdl = EDFreader(sys.argv[1])
