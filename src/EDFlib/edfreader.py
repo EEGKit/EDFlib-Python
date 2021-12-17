@@ -999,7 +999,7 @@ class EDFreader:
                 duration_in_txt[j] = scratchpad[j]
                 if (duration_in_txt[j] < 32) or (duration_in_txt[j] > 126):
                   duration_in_txt[j] = 46
-              duration_in_txt[j] = 0
+              duration_in_txt[j + 1] = 0
 
               duration = 1
               duration_start = 0
