@@ -123,6 +123,8 @@ class EDFreader:
 
   The description/name of an EDF+ annotation on the other hand, is encoded in UTF-8.
 
+  Annotations: onset and duration are expressed in units of 100 nano-Sec.
+
   author: Teunis van Beelen
   """
 
@@ -165,7 +167,7 @@ class EDFreader:
   EDFLIB_PHYSMIN_IS_PHYSMAX         = -25
   EDFLIB_DATARECORD_SIZE_TOO_BIG    = -26
 
-  EDFLIB_VERSION = 102
+  EDFLIB_VERSION = 103
 
 # max size of annotationtext
   __EDFLIB_WRITE_MAX_ANNOTATION_LEN = 40
@@ -178,6 +180,7 @@ class EDFreader:
 
   __EDFLIB_ANNOT_MEMBLOCKSZ = 1000
 
+# Annotation, onset and duration are expressed in units of 100 nano-Sec.
   EDFAnnotationStruct = namedtuple("annotation", ["onset", "duration", "description"])
 
   def __init__(self, path: str):
@@ -206,6 +209,7 @@ class EDFreader:
     self.__plus_recording_additional = ""
     self.__reserved = ""
     self.__starttime_offset = 0
+# the list of annotations, onset and duration are expressed in units of 100 nano-Sec.
     self.annotationslist = []
 
     if sys.version_info[0] != 3 or sys.version_info[1] < 5:
@@ -275,25 +279,25 @@ class EDFreader:
     EDFLIB_FILETYPE_BDFPLUS  = 3
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__filetype
 
   def getStartTimeHour(self) -> int:
     """Returns the hours of the starttime of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__starttime_hour
 
   def getStartTimeMinute(self) -> int:
     """Returns the minutes of the starttime of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__starttime_minute
 
   def getStartTimeSecond(self) -> int:
     """Returns the seconds of the starttime of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__starttime_second
 
   def getStartTimeSubSecond(self) -> int:
@@ -303,31 +307,31 @@ class EDFreader:
     in units of 100 nanoSeconds.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__starttime_offset
 
   def getStartDateDay(self) -> int:
     """Returns the days of the startdate of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__startdate_day
 
   def getStartDateMonth(self) -> int:
     """Returns the month of the startdate of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__startdate_month
 
   def getStartDateYear(self) -> int:
     """Returns the year of the startdate of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__startdate_year
 
   def getStartDateTime(self) -> datetime:
     """Returns a datetime structure containing the startdate and starttime of the recording."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__filestart_dt
 
   def getPatient(self) -> str:
@@ -336,7 +340,7 @@ class EDFreader:
     Is always empty if filetype is EDF+ or BDF+.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__patient
 
   def getRecording(self) -> str:
@@ -345,7 +349,7 @@ class EDFreader:
     Is always empty if filetype is EDF+ or BDF+.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__recording
 
   def getPatientCode(self) -> str:
@@ -354,7 +358,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_patientcode
 
   def getPatientGender(self) -> str:
@@ -363,7 +367,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_gender
 
   def getPatientBirthDate(self) -> str:
@@ -372,7 +376,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_birthdate
 
   def getPatientName(self) -> str:
@@ -381,7 +385,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_patient_name
 
   def getPatientAdditional(self) -> str:
@@ -390,7 +394,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_patient_additional
 
   def getAdministrationCode(self) -> str:
@@ -399,7 +403,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_admincode
 
   def getTechnician(self) -> str:
@@ -408,7 +412,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_technician
 
   def getEquipment(self) -> str:
@@ -417,7 +421,7 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_equipment
 
   def getRecordingAdditional(self) -> str:
@@ -426,19 +430,19 @@ class EDFreader:
     Is always empty if filetype is EDF or BDF.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__plus_recording_additional
 
   def getReserved(self) -> str:
     """Returns the reserved field of the file header."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__reserved
 
   def getNumSignals(self) -> int:
     """Returns the number of signals in the file."""
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return (self.__edfsignals - self.__nr_annot_chns)
 
   def getNumDataRecords(self) -> int:
@@ -447,7 +451,7 @@ class EDFreader:
     The duration of a recording = number of datarecords * datarecord duration.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__datarecords
 
   def getLongDataRecordDuration(self) -> int:
@@ -457,7 +461,7 @@ class EDFreader:
     Duration is expressed in units of 100 nanoSeconds.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return self.__long_data_record_duration
 
   def getFileDuration(self) -> int:
@@ -466,7 +470,7 @@ class EDFreader:
     File duration expressed in units of 100 nanoSeconds.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     return (self.__long_data_record_duration * self.__datarecords)
 
   def getSampelsPerDataRecord(self, s: int) -> int:
@@ -478,7 +482,7 @@ class EDFreader:
     The total number of samples of a signal in a file = samples per record * datarecords.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_smp_per_record[self.__mapped_signals[s]]
@@ -492,7 +496,7 @@ class EDFreader:
     The total number of samples of a signal in a file = samples per record * datarecords.
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return (self.__param_smp_per_record[self.__mapped_signals[s]] * self.__datarecords)
@@ -503,7 +507,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return (self.__param_smp_per_record[self.__mapped_signals[s]] / (self.__long_data_record_duration / self.EDFLIB_TIME_DIMENSION))
@@ -514,7 +518,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_label[self.__mapped_signals[s]]
@@ -526,7 +530,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_physdimension[self.__mapped_signals[s]]
@@ -537,7 +541,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_transducer[self.__mapped_signals[s]]
@@ -549,7 +553,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_prefilter[self.__mapped_signals[s]]
@@ -560,7 +564,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_reserved[self.__mapped_signals[s]]
@@ -582,7 +586,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_phys_min[self.__mapped_signals[s]]
@@ -604,7 +608,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_phys_max[self.__mapped_signals[s]]
@@ -626,7 +630,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_dig_min[self.__mapped_signals[s]]
@@ -648,7 +652,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
     return self.__param_dig_max[self.__mapped_signals[s]]
@@ -663,7 +667,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
 
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
@@ -680,7 +684,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
 
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
@@ -700,7 +704,7 @@ class EDFreader:
     s is the signal number (zero-based).
     """
     if self.__status_ok == 0:
-      raise EDFException("File is closed.")
+      raise EDFexception("File is closed.")
 
     if (s < 0) or (s >= (self.__edfsignals - self.__nr_annot_chns)):
       raise EDFexception("Invalid signal number.")
