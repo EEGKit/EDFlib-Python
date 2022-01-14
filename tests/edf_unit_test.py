@@ -68,9 +68,26 @@ sbuf = np.zeros(300, dtype = np.int16)
 
 ibuf = np.zeros(300, dtype = np.int32)
 
+hdl_out = EDFwriter("test4.edf", EDFwriter.EDFLIB_FILETYPE_EDFPLUS, 1)
+
+assert(hdl_out.version() == 106)
+
+assert(hdl_out.setSampleFrequency(0, 10239) == 0)
+assert(hdl_out.setPhysicalMaximum(0, -10000) == 0)
+assert(hdl_out.setPhysicalMinimum(0, -30000) == 0)
+assert(hdl_out.setDigitalMaximum(0, 10000) == 0)
+assert(hdl_out.setDigitalMinimum(0, -10000) == 0)
+assert(hdl_out.setPatientName("Xohn Doe") == 0)
+assert(hdl_out.setPatientCode("X1234") == 0)
+assert(hdl_out.setAdditionalPatientInfo("Xop") == 0)
+assert(hdl_out.setAdministrationCode("X89") == 0)
+assert(hdl_out.setTechnician("Xichard Roe") == 0)
+assert(hdl_out.setEquipment("Xevice") == 0)
+assert(hdl_out.writeSamples(dbuf) == 0)
+assert(hdl_out.close() == 0)
+
 hdl_out = EDFwriter("test.edf", EDFwriter.EDFLIB_FILETYPE_EDFPLUS, 512)
 
-assert(hdl_out.version() == 105)
 for i in range(0, 512):
   assert(hdl_out.setSampleFrequency(i, 10239) == 0)
   assert(hdl_out.setPhysicalMaximum(i, -10000) == 0)
@@ -322,9 +339,21 @@ assert(hdl_out.close() == 0)
 
 ################################### EDF reading ###############################
 
+hdl_in = EDFreader("test4.edf")
+
+assert(hdl_in.version() == 106)
+assert(hdl_in.getFileType() == hdl_in.EDFLIB_FILETYPE_EDFPLUS)
+assert(hdl_in.getNumSignals() == 1)
+assert(hdl_in.getPatientName() == "Xohn Doe")
+assert(hdl_in.getPatientCode() == "X1234")
+assert(hdl_in.getPatientAdditional()[0 : 3] == "Xop")
+assert(hdl_in.getAdministrationCode() == "X89")
+assert(hdl_in.getTechnician() == "Xichard Roe")
+assert(hdl_in.getEquipment() == "Xevice")
+assert(hdl_in.close() == 0)
+
 hdl_in = EDFreader("test.edf")
 
-assert(hdl_in.version() == 105)
 assert(hdl_in.getFileType() == hdl_in.EDFLIB_FILETYPE_EDFPLUS)
 assert(hdl_in.getNumSignals() == 2)
 assert(dblcmp_lim(hdl_in.getSampleFrequency(0), 153.8461538, 1e-6) == 0)
@@ -357,7 +386,6 @@ assert(hdl_in.getTechnician() == "Richard Roe")
 assert(hdl_in.getEquipment() == "device")
 assert(hdl_in.getLongDataRecordDuration() == 1300000)
 assert(hdl_in.getNumDataRecords() == 10)
-assert(len(hdl_in.annotationslist) == 4)
 assert(hdl_in.getSignalLabel(0) == "trace1          ")
 assert(hdl_in.getSignalLabel(1) == "trace2          ")
 assert(hdl_in.getPhysicalMaximum(0) == 10000)

@@ -167,7 +167,7 @@ class EDFreader:
   EDFLIB_PHYSMIN_IS_PHYSMAX         = -25
   EDFLIB_DATARECORD_SIZE_TOO_BIG    = -26
 
-  EDFLIB_VERSION = 105
+  EDFLIB_VERSION = 106
 
 # max size of annotationtext
   __EDFLIB_WRITE_MAX_ANNOTATION_LEN = 40
@@ -1430,7 +1430,7 @@ class EDFreader:
         return -35
 
       p = 0
-      if str80[p] == ord('X'):
+      if (str80[p] == ord('X')) and (str80[p + 1] == ord(' ')):
         self.__plus_patientcode = ""
         p += 2
       else:
@@ -1610,7 +1610,7 @@ class EDFreader:
       p += (i + 1)
       self.__plus_startdate = str128[0 : i].decode("ascii")
 
-      if str80[p] == ord('X'):
+      if (str80[p] == ord('X')) and (str80[p + 1] == ord(' ')):
         plus_admincode = ""
         p += 2
       else:
@@ -1623,7 +1623,7 @@ class EDFreader:
         p += (i + 1)
         self.__plus_admincode = str128[0 : i].decode("ascii")
 
-      if str80[p] == ord('X'):
+      if (str80[p] == ord('X')) and (str80[p + 1] == ord(' ')):
         plus_technician = ""
         p += 2
       else:
@@ -1636,7 +1636,7 @@ class EDFreader:
         p += (i + 1)
         self.__plus_technician = str128[0 : i].decode("ascii")
 
-      if str80[p] == ord('X'):
+      if (str80[p] == ord('X')) and (str80[p + 1] == ord(' ')):
         plus_equipment = ""
         p += 2
       else:
